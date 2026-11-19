@@ -3,3 +3,9 @@ Thumbs.db
 .vscode/
 .idea/
 .claude/
+
+# 로컬 원천 자료 — 공개 저장소에 올리지 않음
+새 폴더/
+기업가치평가시스템_설계서.md
+IMG_*.png
+screenshots/

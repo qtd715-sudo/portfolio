@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="color-scheme" content="light dark" />
+  <meta name="description" content="B2B SaaS 제품 매뉴얼 작성·검증 전 주기 자동화 파이프라인 — AI 멀티 에이전트 시스템 케이스 스터디" />
+  <title>매뉴얼 자동화 에이전트 · SoYoung Back</title>
+  <script>try{var t=localStorage.getItem('theme');if(t==='dark'||t==='light')document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hahmlet:wght@500;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="header">
+    <div class="container header-inner">
+      <a class="logo" href="index.html">SoYoung Back</a>
+      <nav class="nav" aria-label="주 메뉴">
+        <ul class="nav-list">
+          <li><a href="index.html">홈</a></li>
+          <li><a href="project-valuation.html">01 기업가치평가</a></li>
+          <li><a href="project-manual-agent.html" aria-current="page">02 매뉴얼 자동화</a></li>
+          <li><a href="project-ourcheck.html">03 아워체크</a></li>
+        </ul>
+        <div class="nav-tools">
+          <button type="button" class="theme-btn" aria-label="다크 모드로 전환">
+            <svg class="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+            <svg class="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+          </button>
+          <button class="nav-toggle" type="button" aria-label="메뉴 열기" aria-expanded="false"><span></span><span></span><span></span></button>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="page-hero">
+      <div class="container">
+        <p class="crumb"><a href="index.html#featured">← 포트폴리오</a><span>/</span><span>Project 02</span></p>
+        <p class="eyebrow">Project 02 · 사내 AX · AI Agent System Engineering</p>
+        <h1>B2B SaaS 제품 매뉴얼 작성·검증 전 주기 자동화 파이프라인</h1>
+        <p class="lede">「LLM이 쓰고, 규칙 엔진이 판정하고, 완성본이 기준이 되는」 B2B 구매·조달 SaaS 솔루션의 제품 매뉴얼(국·영 Word) 작성·번역·검증 자동화 체계입니다.</p>
+        <div class="meta-row">
+          <span><b>성격</b>사내 AX(업무 AI 전환)</span>
+          <span><b>기간</b>2026-04 ~ 진행 중 (약 8개월)</span>
+          <span><b>역할</b>단독 — 기획 · 아키텍처 · 규칙 · 프롬프트 · 검증 · 운영</span>
+          <span><b>구현</b>AI 협업 개발</span>
+          <span><b>스택</b>Claude Code · Python · Playwright MCP · Word OOXML</span>
+        </div>
+        <div class="tag-row" style="margin-top:14px">
+          <span class="status-badge live">운영 중</span>
+          <span class="tag">Multi-Agent</span><span class="tag">PreToolUse Hooks</span><span class="tag">Rule Engine</span><span class="tag">Human-in-the-loop Eval</span>
+        </div>
+      </div>
+    </section>
+
+    <div class="container doc-wrap">
+      <nav class="toc" aria-label="페이지 목차">
+        <h2>차례</h2>
+        <ol>
+          <li><a href="#s00"><span class="n">00</span>성과 요약</a></li>
+          <li><a href="#s01"><span class="n">01</span>문제 정의</a></li>
+          <li><a href="#s02"><span class="n">02</span>시스템 아키텍처</a></li>
+          <li><a href="#s03"><span class="n">03</span>프롬프트·가드레일</a></li>
+          <li><a href="#s04"><span class="n">04</span>트러블슈팅 v1→v2</a></li>
+          <li><a href="#s05"><span class="n">05</span>검증 지표·한계</a></li>
+          <li><a href="#s06"><span class="n">06</span>실행 증빙</a></li>
+        </ol>
+      </nav>
+
+      <div class="doc-main">
+
+        <!-- ───────── 00 ───────── -->
+        <section id="s00" class="doc-section">
+          <div class="sec-head">
+            <p class="eyebrow">00 · Summary</p>
+            <h2>한눈에 보는 성과 요약</h2>
+            <p>모든 수치는 프로젝트 폴더와 실행 로그에서 직접 센 값입니다. 재지 못한 값은 추정하지 않고 빈칸으로 두었습니다.</p>
+          </div>
+          <div class="kpi-grid">
+            <div class="kpi accent">
+              <span class="k-label">기여도</span>
+              <span class="k-value">100<small>% 단독</small></span>
+              <span class="k-note">기획·설계·검증·운영 1인. 코드는 AI 협업 개발(요구사항·판정 기준·시험은 본인, 작성은 Claude)</span>
+            </div>
+            <div class="kpi">
+              <span class="k-label">시스템 구성</span>
+              <span class="k-value">3·4·21·3</span>
+              <span class="k-note">커맨드 · 에이전트 · 스킬 · 훅 (+ 야간 자동 작업 2)</span>
+            </div>
+            <div class="kpi">
+              <span class="k-label">코드 규모</span>
+              <span class="k-value">44,931<small>줄</small></span>
+              <span class="k-note">파이썬 176개 파일 (+ PowerShell 12개)</span>
+            </div>
+            <div class="kpi">
+              <span class="k-label">수정 채택률</span>
+              <span class="k-value">88.8 <small>/</small> 93.2<small>%</small></span>
+              <span class="k-note">국문 / 영문 — AI가 바꾼 곳이 사람의 다음 판에 남은 비율</span>
+            </div>
+            <div class="kpi accent">
+              <span class="k-label">후처리 시간</span>
+              <span class="k-value">−77<small>%</small></span>
+              <span class="k-note">마무리 체인 국·영 2권(약 95쪽) 45분 → 10분 (2,731초 → 616초)</span>
+            </div>
+            <div class="kpi">
+              <span class="k-label">산출물 (5주)</span>
+              <span class="k-value">122<small>판</small></span>
+              <span class="k-note">Word 판 122 · 엑셀 보고서 64 · 캡처 4,323장</span>
+            </div>
+          </div>
+
+          <h3>6주 사이 시스템 성장 (같은 항목 비교)</h3>
+          <div class="tbl-scroll">
+            <table class="plain mid">
+              <thead><tr><th>항목</th><th>2026-10-08</th><th>2026-11-18</th></tr></thead>
+              <tbody>
+                <tr><td>에이전트 / 스킬 / 커맨드 / 훅</td><td class="num">3 / 13 / 2 / 0</td><td class="num"><b>4 / 21 / 3 / 3</b></td></tr>
+                <tr><td>파이썬 도구</td><td class="num">111개 · 약 28,500줄</td><td class="num"><b>176개 · 44,931줄</b></td></tr>
+                <tr><td>작성 가이드</td><td class="num">약 1,100줄</td><td class="num">1,236줄</td></tr>
+                <tr><td>모범 완성본(골든 셋)</td><td class="num">7쌍</td><td class="num">10쌍</td></tr>
+                <tr><td>정확도 측정 체계</td><td>없음</td><td><b>매일 자동</b> — 6개 모듈 · 시험 자료 35짝</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- ───────── 01 ───────── -->
+        <section id="s01" class="doc-section">
+          <div class="sec-head">
+            <p class="eyebrow">01 · Problem (As-Is)</p>
+            <h2>문제 정의 — 사람마다 다른 "잘 쓴 매뉴얼"</h2>
+            <p>SaaS 제품 매뉴얼을 <b>모듈 × 포털(구매사·협력사) × 언어(국·영)</b> 조합으로 만들고 버전업합니다. 한 권은 90~100쪽입니다(협력사 완성본 기준 국문 91쪽, 영문 95~96쪽).</p>
+          </div>
+          <div class="panel">
+            <p class="small muted" style="margin-bottom:8px">기존 수작업 공정</p>
+            <div class="process">
+              <span class="step">화면 캡처</span><span class="arrow">→</span>
+              <span class="step">항목(라벨) 옮겨 적기</span><span class="arrow">→</span>
+              <span class="step">원고 작성</span><span class="arrow">→</span>
+              <span class="step">영문 번역</span><span class="arrow">→</span>
+              <span class="step">Word 양식 맞춤</span><span class="arrow">→</span>
+              <span class="step">상호참조·캡션·아이콘</span><span class="arrow">→</span>
+              <span class="step">검수</span>
+            </div>
+          </div>
+
+          <h3>문서로 확인되는 5대 병목</h3>
+          <div class="bottleneck-grid">
+            <div class="bottleneck"><span class="b-no">B1 · 기준</span><h4>기준 불일치</h4><p>"잘 쓴 매뉴얼"의 기준이 사람마다 달라 문체·금지어·양식이 판마다 흔들림</p></div>
+            <div class="bottleneck"><span class="b-no">B2 · 정합성</span><h4>서술 ↔ 실제 동작 불일치</h4><p>매뉴얼 서술과 실제 제품 동작(소스·화면)이 어긋남</p></div>
+            <div class="bottleneck"><span class="b-no">B3 · 화면</span><h4>Canvas 그리드</h4><p>화면 그리드가 canvas로 그려져 라벨·데이터가 DOM에 없음 — 눈으로 옮겨 적어야 함</p></div>
+            <div class="bottleneck"><span class="b-no">B4 · 이미지</span><h4>캡처 해상도 기준 모호</h4><p>"원본 픽셀" 기준이라 Word에 넣으면 흐림</p></div>
+            <div class="bottleneck"><span class="b-no">B5 · 다국어</span><h4>국·영 구조 드리프트</h4><p>국문과 영문의 표 행·설명 구조가 판을 거듭할수록 어긋남</p></div>
+          </div>
+
+          <h3>리드타임 비교</h3>
+          <div class="tbl-scroll">
+            <table class="plain wide">
+              <thead><tr><th>공정 (1권 기준)</th><th>도입 전 (수작업)</th><th>도입 후</th><th>근거</th></tr></thead>
+              <tbody>
+                <tr><td>캡처·라벨 옮겨 적기</td><td>약 5일</td><td>캡처 71장 + 라벨 202줄 = <b>1일</b></td><td class="muted">작업 기록</td></tr>
+                <tr><td>국문 Word 작성</td><td>약 3일</td><td><b>캡처 당일</b></td><td class="muted">작업 기록</td></tr>
+                <tr><td>영문 이식·어투 검수</td><td>약 3일</td><td>도구 실행 <b>약 1분</b> + 사람 확인</td><td class="muted">세션 기록 10-07~11-17 (아래 표)</td></tr>
+                <tr><td>양식·레이아웃 마무리 (국·영)</td><td>약 2일</td><td><b>10~20분</b></td><td class="muted">마무리 시간 이력 112행</td></tr>
+                <tr><td>납품 전 검사</td><td>약 3일</td><td><b>13.6초</b> + 사람 확인</td><td class="muted">야간 측정 보고</td></tr>
+                <tr class="total"><td>1권 (국·영) 전체</td><td>약 20일</td><td>약 4작업일</td><td>협력사판 실측</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="small muted" style="margin-top:8px">도입 전 1권 약 20일 = 단계 합 16일 + 검수 왕복·대기 약 4일.</p>
+          <div class="tbl-scroll" style="margin-top:12px">
+            <table class="plain mid">
+              <thead><tr><th>도구 실행 시간 (10-07 ~ 11-17 세션 기록)</th><th class="num">실행 횟수</th><th class="num">중앙값</th><th class="num">최대</th></tr></thead>
+              <tbody>
+                <tr><td>영문 이식</td><td class="num">26회</td><td class="num">12초</td><td class="num">70초</td></tr>
+                <tr><td>영문 어투 검사</td><td class="num">80회</td><td class="num">12초</td><td class="num">111초</td></tr>
+                <tr><td>국문 기준 국영 대조 검사</td><td class="num">60회</td><td class="num">43초</td><td class="num">186초</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="small muted" style="margin-top:8px">영문 단계 도구 실행 = 중앙값 합 67초(약 1분). 사람의 어투 확인 시간은 포함하지 않은 값입니다.</p>
+          <p class="small muted" style="margin-top:8px">실측 일정: 퍼포먼스평가 구매사판 국·영 — 초안부터 최종까지 약 20작업일(사용자 수정 반복 포함) → 같은 모듈 협력사판 국·영 — 재개 후 <b>약 4작업일</b>에 완성본(준비 1일 별도).</p>
+        </section>
+
+        <!-- ───────── 02 ───────── -->
+        <section id="s02" class="doc-section">
+          <div class="sec-head">
+            <p class="eyebrow">02 · Architecture</p>
+            <h2>시스템 아키텍처 — 두 세션, 한 장의 계약</h2>
+            <p>화면을 다루는 세션과 문서를 다루는 세션을 나누고, 두 세션은 <b>문서로만</b> 일을 넘깁니다. 모든 도구 실행은 훅이 먼저 검문하고, 사람이 고친 판은 야간 배치가 정답 자료로 바꿉니다.</p>
+          </div>
+          <p class="scroll-hint">← 좌우로 밀어서 보기 →</p>
+          <div class="diagram">
+            <svg viewBox="0 0 960 580" role="img" aria-label="아키텍처: 사용자 지시가 CLAUDE.md 라우팅을 거쳐 화면·분석 세션과 문서·검증 세션으로 나뉘고, 두 세션은 핸드오프 계약으로 연결되며, 사용자 수정판은 야간 20시 자가학습 Diff 배치를 거쳐 규칙 개선으로 돌아온다">
+              <defs>
+                <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" style="fill:var(--ink-3)"/></marker>
+                <marker id="ah2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" style="fill:var(--accent)"/></marker>
+              </defs>
+
+              <!-- 입력 -->
+              <rect class="box" x="330" y="14" width="300" height="40" rx="8"/>
+              <text x="480" y="39" text-anchor="middle">사용자 한 줄 지시 · /커맨드 3종</text>
+              <line x1="480" y1="54" x2="480" y2="84"/>
+
+              <!-- 라우팅 -->
+              <rect class="box p" x="270" y="86" width="420" height="50" rx="8"/>
+              <text x="480" y="107" text-anchor="middle" class="h">CLAUDE.md — 상시 로드 인덱스</text>
+              <text x="480" y="125" text-anchor="middle" class="s">작업 라우팅 5단계 · 역할 경계 · 금지 사항 (151줄)</text>
+
+              <!-- 라우팅 화살 (훅 띠 아래로 지나감) -->
+              <line x1="380" y1="136" x2="230" y2="214"/>
+              <line x1="580" y1="136" x2="730" y2="214"/>
+              <!-- 훅 띠 -->
+              <rect class="box a" x="30" y="160" width="900" height="30" rx="6"/>
+              <text x="480" y="180" text-anchor="middle" class="ta">PreToolUse 훅 3종 — guard_docs · guard_scripts · guard_latest · 모든 도구 실행 전 검문</text>
+
+              <!-- 세션 ① -->
+              <rect class="grp" x="30" y="214" width="390" height="190" rx="12"/>
+              <text x="48" y="238" class="t">SESSION 1 · 화면·분석</text>
+              <rect class="box" x="48" y="250" width="354" height="42" rx="6"/>
+              <text x="62" y="268" class="h">tester</text><text x="62" y="284" class="s">화면 캡처 · 업무 시나리오 실수행 · 구·신 화면 비교</text>
+              <rect class="box" x="48" y="298" width="354" height="42" rx="6"/>
+              <text x="62" y="316" class="h">source-analyst</text><text x="62" y="332" class="s">서버별 소스 분석 · 매뉴얼 대비 변경 엑셀</text>
+              <rect class="box" x="48" y="346" width="354" height="42" rx="6"/>
+              <text x="62" y="364" class="h">writer</text><text x="62" y="380" class="s">작성 가이드에 따라 1차 HTML 원고</text>
+
+              <!-- 세션 ② -->
+              <rect class="grp" x="540" y="214" width="390" height="190" rx="12"/>
+              <text x="558" y="238" class="t">SESSION 2 · 문서·검증</text>
+              <rect class="box p" x="558" y="250" width="354" height="42" rx="6"/>
+              <text x="572" y="268" class="h">reviewer</text><text x="572" y="284" class="s">HTML 검증 게이트 + Word 이식·개정·검사 게이트</text>
+              <rect class="box" x="558" y="298" width="354" height="42" rx="6"/>
+              <text x="572" y="316">Word 빌드 → 영문 이식 → 마무리 체인</text><text x="572" y="332" class="s">docx XML 직접 편집 · 검사는 1회</text>
+              <rect class="box" x="558" y="346" width="354" height="42" rx="6"/>
+              <text x="572" y="364" class="h">산출물</text><text x="572" y="380" class="s">_N.docx (국·영) + 변경 보고서 xlsx</text>
+
+              <!-- 핸드오프 -->
+              <text x="480" y="276" text-anchor="middle" class="s">핸드오프 + 라벨표</text>
+              <line x1="420" y1="286" x2="538" y2="286"/>
+              <text x="480" y="354" text-anchor="middle" class="s">재작업요청</text>
+              <line x1="538" y1="364" x2="422" y2="364"/>
+              <text x="480" y="322" text-anchor="middle" class="s" style="font-size:9.5px">문서로만 인수인계</text>
+
+              <!-- 소스 -->
+              <rect class="box" x="30" y="424" width="390" height="40" rx="6"/>
+              <text x="48" y="448">라이브 시스템(조회만) · 소스 저장소 35개</text>
+              <line x1="225" y1="424" x2="225" y2="406"/>
+
+              <!-- 사용자 검수 -->
+              <rect class="box" x="540" y="424" width="390" height="40" rx="6"/>
+              <text x="558" y="448">사용자 검수 → 수정판(.docx1) 업로드</text>
+              <line x1="735" y1="404" x2="735" y2="422"/>
+              <line x1="735" y1="464" x2="735" y2="490"/>
+
+              <!-- 야간 배치 -->
+              <rect class="box a" x="30" y="492" width="900" height="64" rx="8"/>
+              <text x="48" y="516" class="h">야간 20:00 자가학습 Diff 배치 · LLM 호출 0</text>
+              <text x="48" y="538" class="s">AI 판 ↔ 사람 수정판 문단 diff → 재현율·정확도·채택률 → 개선 후보 → 사람 승인 → 규칙·도구 반영 → 재측정</text>
+              <path class="loop" d="M30 524 H14 V111 H268"/>
+              <text x="24" y="104" class="s" style="fill:var(--cond-ink)">피드백 루프 (승인 후)</text>
+            </svg>
+          </div>
+          <p class="diagram-caption">점선 상자 = 세션 경계. 주황 = 사람 피드백이 규칙으로 돌아오는 경로(승인 전에는 규칙이 스스로 바뀌지 않음).</p>
+
+          <h3>세 층 구조 — 누가 무엇을 결정하나</h3>
+          <div class="layer-grid">
+            <div class="layer">
+              <span class="l-tag">Layer 1 · 생성</span>
+              <h4>LLM (Claude)</h4>
+              <p>원고 작성 · 국→영 문형 적용 · 사람 눈 검토 · 도구 선택</p>
+              <p class="l-rule">판정은 하지 않는다</p>
+            </div>
+            <div class="layer l2">
+              <span class="l-tag">Layer 2 · 판정</span>
+              <h4>규칙 엔진 (Python · 정규식)</h4>
+              <p>합격/불합격 판정, Word XML 편집. 같은 문서면 같은 결과</p>
+              <p class="l-rule">결정론적 — 재현 가능</p>
+            </div>
+            <div class="layer l3">
+              <span class="l-tag">Layer 3 · 기준</span>
+              <h4>모범본 기준선</h4>
+              <p>납품 완료 국·영 매뉴얼 10쌍의 실측값 과반 = 규칙</p>
+              <p class="l-rule">모델 재훈련이 아닌 데이터 기준</p>
+            </div>
+          </div>
+          <div class="callout info" style="margin-top:12px"><b>사람의 자리.</b> 목차 컨펌 · 작업 범위 · 갈리는 문형 결정 · 개선 후보 승인 · 최종 검수. 자동화가 사람을 빼는 것이 아니라, 사람이 판단해야 하는 지점만 남기도록 설계했습니다.</div>
+
+          <h3>구성요소 실측</h3>
+          <div class="tbl-scroll">
+            <table class="plain mid">
+              <thead><tr><th>구성</th><th class="num">수</th><th>내용</th></tr></thead>
+              <tbody>
+                <tr><td>커맨드</td><td class="num">3</td><td><code>/manual-new</code> 신규 · <code>/manual-update</code> 버전업 · <code>/good-intake</code> 완성본 학습</td></tr>
+                <tr><td>에이전트</td><td class="num">4</td><td>tester 126줄 · writer 136줄 · reviewer 225줄 · source-analyst 38줄</td></tr>
+                <tr><td>스킬</td><td class="num">21</td><td>최대: 기준선 대조 검사 7,776줄 · 국→영 Word 이식 7,099줄 · Word XML 편집 7,032줄 · 화면 자동 캡처 5,959줄</td></tr>
+                <tr><td>훅 (PreToolUse)</td><td class="num">3</td><td>guard_docs 76줄 · guard_scripts 56줄 · guard_latest 101줄</td></tr>
+                <tr><td>야간 자동 작업</td><td class="num">2</td><td>화면 학습(라이브 화면·소스 순회, 토큰 예산 관리) · 정확도 측정(20:00)</td></tr>
+                <tr><td>MCP</td><td class="num">1</td><td>Playwright — 브라우저 자동화</td></tr>
+                <tr><td>장기 메모리</td><td class="num">93</td><td>작업 피드백 48 · 프로젝트 상태 42 · 참조 2 · 사용자 1</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- ───────── 03 ───────── -->
+        <section id="s03" class="doc-section">
+          <div class="sec-head">
+            <p class="eyebrow">03 · Prompt · Guardrail · Word Engine</p>
+            <h2>프롬프트·가드레일·Word 편집 엔진 설계</h2>
+            <p>지침은 "읽으면 좋은 것"에 그치기 쉽습니다. 그래서 규칙은 문서 한 곳에 두고, 지켜야 하는 것은 훅과 스크립트로 <b>강제</b>했습니다.</p>
+          </div>
+
+          <h3>컨텍스트 우선순위 (명문화)</h3>
+          <div class="chain">
+            <span>작성 가이드 v2</span><i>&gt;</i><span>문체·금지어 규칙</span><i>&gt;</i><span>핸드오프 계약</span><i>&gt;</i><span>커맨드</span><i>&gt;</i><span>에이전트</span><i>&gt;</i><span>스킬</span><i>&gt;</i><span>메모리</span>
+          </div>
+          <p class="small muted" style="margin-top:8px">가이드가 완성본 실측과 다르면 실측으로 가이드를 고칩니다. 137KB짜리 통합 지침(v1)을 151줄 인덱스 + 장별 문서 9종(약 3,500줄)으로 분리했고, 개정 근거는 날짜로 남깁니다(작성 가이드 24일·179건, 인덱스 20일·49건).</p>
+
+          <h3>PreToolUse 훅 3종 — 지침이 아닌 시스템으로 막기</h3>
+          <div class="hook-grid">
+            <article class="hook">
+              <header><code>guard_docs</code><span class="lines">76줄</span></header>
+              <p>규칙 문서 3종(영문 작업이면 + 국영 문형대조)을 <b>읽은 기록이 없으면</b> Word 도구 실행을 막습니다.</p>
+              <span class="block">차단 대상: 규칙 미독 상태의 Word 빌드</span>
+            </article>
+            <article class="hook">
+              <header><code>guard_scripts</code><span class="lines">56줄</span></header>
+              <p>지난 작업 폴더의 임시 스크립트를 복사하거나 실행하지 못하게 막고, 새 스크립트는 허락 창을 띄웁니다.</p>
+              <span class="block">차단 대상: 옛 버그를 품은 스크립트 재사용</span>
+            </article>
+            <article class="hook">
+              <header><code>guard_latest</code><span class="lines">101줄</span></header>
+              <p>사용자가 마지막으로 고친 판(.docx1 · 열린 Word)이 아닌 옛 판을 바탕으로 빌드하거나 지시하면 막습니다.</p>
+              <span class="block">차단 대상: 사람 수정 내용의 되돌림</span>
+            </article>
+          </div>
+
+          <h3>Word XML 직접 편집 엔진</h3>
+          <div class="two-up">
+            <div class="list-card">
+              <h4>제약</h4>
+              <ul>
+                <li>XML만으로는 줄바꿈·쪽 끝 같은 실제 레이아웃을 알 수 없음</li>
+              </ul>
+            </div>
+            <div class="list-card plan">
+              <h4>설계</h4>
+              <ul>
+                <li>docx 내부 XML을 파이썬으로 직접 편집하고 zip으로 다시 저장 — Word 프로그램을 거치지 않음</li>
+                <li>원본 불변: 모든 도구는 새 파일(_N)로 저장, 손대지 않은 장은 원본과 차이 0 검증</li>
+                <li>레이아웃 판정 도구(버튼 줄바꿈 · 빈 쪽 · 표 칸 단어 끊김)를 마무리 체인에 고정</li>
+              </ul>
+            </div>
+          </div>
+          <p class="small muted" style="margin:10px 0 6px">마무리 후처리 체인 <code>finish_all.py</code> — 국·영 동시 실행, 단계별 시간 기록</p>
+          <div class="chain">
+            <span>빈 줄</span><i>→</i><span>표 칸</span><i>→</i><span>상호참조</span><i>→</i><span>캡처 크기</span><i>→</i><span>버튼 줄바꿈</span><i>→</i><span>쪽 끝</span>
+          </div>
+
+          <h3>금지어 단일 정답 표 — 검사 7종이 한 곳을 읽는다</h3>
+          <p class="small muted">금지어 목록이 검사 스크립트마다 달라 결과가 엇갈리던 문제를, 정규식 규칙 표 한 곳(약 60줄) + 공용 로더 <code>forbidden.py</code>로 해결했습니다. 검출률: 국문 99/106 · 영문 47/48.</p>
+          <div class="tbl-scroll">
+            <table class="plain wide">
+              <thead><tr><th>ID</th><th>언어</th><th>규칙 (정규식)</th><th>읽는 법</th></tr></thead>
+              <tbody>
+                <tr><td><code>F01</code></td><td>KO</td><td><code>하십시오</code> → 하세요</td><td>단순 치환</td></tr>
+                <tr><td><code>F02</code></td><td>KO</td><td><code>(?&lt;![가-힣])만약</code></td><td>앞에 한글이 붙은 낱말은 제외</td></tr>
+                <tr><td><code>F10</code></td><td>KO</td><td><code>^사용자는 </code></td><td>문단 첫머리 주어만</td></tr>
+                <tr><td><code>F12</code></td><td>KO</td><td>단독 「창」 (「팝업창」 「검색창」은 통과)</td><td>문맥으로 오탐 제외</td></tr>
+                <tr><td><code>F13</code></td><td>EN</td><td><code>Table of Contents</code> → <code>Table Of Contents</code></td><td>근거 = 완성본 9권 중 8권</td></tr>
+                <tr><td><code>F20</code></td><td>EN</td><td><code>(?:Figure|Table) \d+[-‑]\d+ (?! )\S</code></td><td>캡션 번호 뒤 공백은 정확히 1칸</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h3>환각·일탈 방지 장치</h3>
+          <div class="tbl-scroll">
+            <table class="plain mid">
+              <thead><tr><th>장치</th><th>내용</th></tr></thead>
+              <tbody>
+                <tr><td>추측 금지 태그</td><td>화면에서 직접 읽지 못한 라벨은 <code>[미확인]</code>으로 남기고 재작업요청으로 넘김</td></tr>
+                <tr><td>사실의 출처 고정</td><td>라벨 = 화면 직독 라벨표, 기능 = 서버별 소스(어느 서버 기준인지 답에 명시)</td></tr>
+                <tr><td>판정과 생성 분리</td><td>합격/불합격은 LLM이 아니라 정규식·수치 스크립트</td></tr>
+                <tr><td>검사 1회 원칙</td><td>검사 → 수정 → 재검사 반복 금지. 남은 NG는 「확인 필요」로 보고</td></tr>
+                <tr><td>서버 데이터 보호</td><td>조회·팝업만. 확인 팝업은 캡처 뒤 「아니오」로 닫기</td></tr>
+                <tr><td>토큰 예산</td><td>일일 상한 150만 · 35%는 사용자 몫으로 유보 · 주간 사용률 60% 넘으면 학습 중단</td></tr>
+                <tr><td>사람 승인</td><td>야간 배치는 개선 후보까지만 만든다 — 규칙이 스스로 바뀌지 않음</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- ───────── 04 ───────── -->
+        <section id="s04" class="doc-section">
+          <div class="sec-head">
+            <p class="eyebrow">04 · Troubleshooting v1 → v2</p>
+            <h2>트러블슈팅 및 고도화 이력</h2>
+            <p>장기 메모리에 쌓인 작업 피드백 48건 중 핵심 11건입니다. 각 항목을 펼치면 문제 · 원인 · 해결을 볼 수 있습니다.</p>
+          </div>
+          <div class="filter-bar" data-filter-group="cases" role="group" aria-label="사례 분류 필터">
+            <button type="button" class="chip is-active" data-filter="all" aria-pressed="true">전체</button>
+            <button type="button" class="chip" data-filter="guard" aria-pressed="false">가드레일</button>
+            <button type="button" class="chip" data-filter="rule" aria-pressed="false">규칙·컨텍스트</button>
+            <button type="button" class="chip" data-filter="quality" aria-pressed="false">환각·품질</button>
+            <button type="button" class="chip" data-filter="engine" aria-pressed="false">화면·Word 엔진</button>
+            <button type="button" class="chip" data-filter="perf" aria-pressed="false">성능</button>
+            <button type="button" class="chip" data-acc-toggle="cases" style="margin-left:auto">모두 펼치기</button>
+          </div>
+          <p class="filter-count" data-filter-count="cases"></p>
+          <div class="acc" id="cases">
+            <details class="acc-item" data-cat="rule">
+              <summary><span class="acc-no">#01</span><span class="acc-title">규칙이 여러 파일에 복사돼 서로 달라짐</span><span class="acc-meta"><span class="acc-cat">규칙·컨텍스트</span><span class="acc-caret">▾</span></span></summary>
+              <div class="acc-body"><div><b>원인</b>에이전트·스킬마다 규칙을 따로 적음</div><div class="fix"><b>해결 (v2)</b>규칙 본체는 가이드 한 곳, 나머지는 「해당 장을 읽고 동작」 + 우선순위 명문화</div><div><b>효과</b>규칙 변경 지점이 1곳으로</div><span class="date">2026-09-02~</span></div>
+            </details>
+            <details class="acc-item" data-cat="guard">
+              <summary><span class="acc-no">#02</span><span class="acc-title">에이전트가 규칙 문서를 읽지 않고 Word 도구를 실행</span><span class="acc-meta"><span class="acc-cat">가드레일</span><span class="acc-caret">▾</span></span></summary>
+              <div class="acc-body"><div><b>원인</b>지침만으로는 강제할 수 없음</div><div class="fix"><b>해결 (v2)</b>PreToolUse 훅 — 문서를 읽은 기록이 없으면 차단 (guard_docs)</div><div><b>효과</b>규칙 미독 빌드 원천 차단</div><span class="date">2026-10-15</span></div>
+            </details>
+            <details class="acc-item" data-cat="guard">
+              <summary><span class="acc-no">#03</span><span class="acc-title">지난 작업의 임시 스크립트를 복사해 옛 버그 재발</span><span class="acc-meta"><span class="acc-cat">가드레일</span><span class="acc-caret">▾</span></span></summary>
+              <div class="acc-body"><div><b>원인</b>에이전트가 편한 길을 택함</div><div class="fix"><b>해결 (v2)</b>훅으로 차단 + 「도구가 없으면 짜지 말고 보고하거나 기존 스킬 확장을 제안」</div><div><b>효과</b>도구가 스킬 안으로 모임</div><span class="date">2026-10-15, 10-26</span></div>
+            </details>
+            <details class="acc-item" data-cat="guard">
+              <summary><span class="acc-no">#04</span><span class="acc-title">사용자가 고친 내용을 옛 판으로 되돌림</span><span class="acc-meta"><span class="acc-cat">가드레일</span><span class="acc-caret">▾</span></span></summary>
+              <div class="acc-body"><div><b>원인</b>옛 판을 바탕으로 다음 판을 빌드</div><div class="fix"><b>해결 (v2)</b>훅 3 guard_latest — 사용자 최신 판(.docx1 · 열린 Word) 바탕만 허용</div><div><b>효과</b>사람 수정이 다음 판에 보존</div><span class="date">2026-11-16</span></div>
+            </details>
+            <details class="acc-item" data-cat="guard">
+              <summary><span class="acc-no">#05</span><span class="acc-title">검사 → 수정 → 재검사 무한 반복으로 시간 낭비</span><span class="acc-meta"><span class="acc-cat">가드레일</span><span class="acc-caret">▾</span></span></summary>
+              <div class="acc-body"><div><b>원인</b>종료 조건 없음</div><div class="fix"><b>해결 (v2)</b>검사는 1회, 남은 NG는 「확인 필요」로 보고</div><div><b>효과</b>작업 시간 상한 확보</div><span class="date">2026-10-19</span></div>
+            </details>
+            <details class="acc-item" data-cat="rule">
+              <summary><span class="acc-no">#06</span><span class="acc-title">금지어 목록이 검사 스크립트마다 달라 결과 불일치</span><span class="acc-meta"><span class="acc-cat">규칙·컨텍스트</span><span class="acc-caret">▾</span></span></summary>
+              <div class="acc-body"><div><b>원인</b>목록 중복</div><div class="fix"><b>해결 (v2)</b>기계 판독 표 한 곳 + 공용 로더 forbidden.py</div><div><b>효과</b>검사 7종이 같은 정답 사용</div><span class="date">2026-10-08</span></div>
+            </details>
+            <details class="acc-item" data-cat="engine">
+              <summary><span class="acc-no">#07</span><span class="acc-title">canvas 그리드라 화면 값이 DOM에 없음</span><span class="acc-meta"><span class="acc-cat">화면·Word 엔진</span><span class="acc-caret">▾</span></span></summary>
+              <div class="acc-body"><div><b>원인</b>UI 프레임워크 특성</div><div class="fix"><b>해결 (v2)</b>그리드 데이터 제공자를 직접 읽기 + 야간 화면 학습으로 조작 지식 베이스 축적</div><div><b>효과</b>성공 47 · 실패 51 경로 누적</div><span class="date">2026-08~</span></div>
+            </details>
+            <details class="acc-item" data-cat="engine">
+              <summary><span class="acc-no">#08</span><span class="acc-title">영문 표·그림 목차가 갱신해도 비어 있음</span><span class="acc-meta"><span class="acc-cat">화면·Word 엔진</span><span class="acc-caret">▾</span></span></summary>
+              <div class="acc-body"><div><b>원인</b>영문판 캡션이 필드가 아닌 수동 글자(필드 0개) — 처음엔 라벨 불일치로 오진</div><div class="fix"><b>해결 (v2)</b>캡션에 필드 삽입, 오진 과정을 메모리에 기록</div><div><b>효과</b>같은 오진 재발 방지</div><span class="date">—</span></div>
+            </details>
+            <details class="acc-item" data-cat="quality">
+              <summary><span class="acc-no">#09</span><span class="acc-title">화면에 없는 버튼을 「클릭하세요」라고 서술 (환각)</span><span class="acc-meta"><span class="acc-cat">환각·품질</span><span class="acc-caret">▾</span></span></summary>
+              <div class="acc-body"><div><b>원인</b>정형문 관성</div><div class="fix"><b>해결 (v2)</b>버튼 인용 전 화면·라벨표 확인 + 검사 코드 추가 (D5 · F63/F64)</div><div><b>효과</b>규칙 엔진이 환각 문장 검출</div><span class="date">2026-11-17</span></div>
+            </details>
+            <details class="acc-item" data-cat="quality">
+              <summary><span class="acc-no">#10</span><span class="acc-title">"검사 정확도가 얼마냐"는 질문에 답할 근거 없음</span><span class="acc-meta"><span class="acc-cat">환각·품질</span><span class="acc-caret">▾</span></span></summary>
+              <div class="acc-body"><div><b>원인</b>정답 자료 부재</div><div class="fix"><b>해결 (v2)</b>「사람이 고친 곳 = 정답」 diff 평가 + 우연 기준 병기</div><div><b>효과</b>매일 자동 측정 (05장)</div><span class="date">2026-11-09~</span></div>
+            </details>
+            <details class="acc-item" data-cat="perf">
+              <summary><span class="acc-no">#11</span><span class="acc-title">마무리 후처리가 45분 걸림</span><span class="acc-meta"><span class="acc-cat">성능</span><span class="acc-caret">▾</span></span></summary>
+              <div class="acc-body"><div><b>원인</b>국·영 직렬 실행</div><div class="fix"><b>해결 (v2)</b>finish_all.py 국·영 동시 실행 + 단계별 시간 기록</div><div><b>효과</b>2,731초 → 616초 (−77%)</div><span class="date">2026-11-11 → 11-17</span></div>
+            </details>
+          </div>
+        </section>
+
+        <!-- ───────── 05 ───────── -->
+        <section id="s05" class="doc-section">
+          <div class="sec-head">
+            <p class="eyebrow">05 · Evaluation &amp; Limits</p>
+            <h2>정량 검증 지표 및 솔직한 한계</h2>
+            <p>평가 기준: AI가 처음 낸 판과 사람이 최종 채택한 판을 문단 단위로 비교해 <b>사람이 고친 곳을 정답</b>으로 삼고, 검사가 그중 얼마를 미리 잡았는지(재현율)를 잽니다. 무작위로 찍었을 때의 값(우연)을 항상 함께 적습니다.</p>
+          </div>
+
+          <div class="kpi-grid">
+            <div class="kpi"><span class="k-label">재현율 · 국문 6짝</span><span class="k-value">53.0<small>%</small></span><span class="k-note">우연 28.3% 대비 <b>1.9배</b></span></div>
+            <div class="kpi"><span class="k-label">재현율 · 영문 4짝</span><span class="k-value">71.0<small>%</small></span><span class="k-note">우연 30.7% 대비 <b>2.3배</b></span></div>
+            <div class="kpi"><span class="k-label">NG 판정 정확도</span><span class="k-value">62 <small>/</small> 55<small>%</small></span><span class="k-note">국문 240/386 · 영문 612/1,110</span></div>
+            <div class="kpi"><span class="k-label">금지어 검출</span><span class="k-value">99<small>/106</small></span><span class="k-note">영문 47/48</span></div>
+          </div>
+
+
+          <h3>산출물·처리 시간</h3>
+          <div class="two-up">
+            <div class="tbl-scroll">
+              <table class="plain">
+                <thead><tr><th>산출물 (2026-10-13 ~ 11-17)</th><th class="num">수</th></tr></thead>
+                <tbody>
+                  <tr><td>Word 판 (_N.docx)</td><td class="num"><b>122</b></td></tr>
+                  <tr><td>사용자 수정판 (.docx1)</td><td class="num">27</td></tr>
+                  <tr><td>엑셀 보고서 (변경·검사·비교·정확도)</td><td class="num">64</td></tr>
+                  <tr><td>핸드오프 / 라벨표 / 재작업요청</td><td class="num">8 / 11 / 7</td></tr>
+                  <tr><td>캡처 (PNG)</td><td class="num"><b>4,323</b></td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="tbl-scroll">
+              <table class="plain">
+                <thead><tr><th>처리</th><th class="num">시간</th></tr></thead>
+                <tbody>
+                  <tr><td>문단 차이 추출</td><td class="num">짝당 0.7초</td></tr>
+                  <tr><td>기준선 대조 검사</td><td class="num">문서당 13.6초</td></tr>
+                  <tr><td>야간 측정 한 회차 (LLM 0)</td><td class="num">224~549초</td></tr>
+                  <tr><td>마무리 체인 국·영 2권</td><td class="num">2,731초 → <b>616초</b></td></tr>
+                  <tr><td>마무리 관문 (11-17)</td><td class="num ok">FAIL 0 · WARN 0</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <h3>한계와 다음 단계</h3>
+          <div class="two-up">
+            <div class="list-card limit">
+              <h4>솔직한 한계</h4>
+              <ul>
+                <li><b>정성적 수정은 잘 못 잡는다</b> — 마지막 단계에 남는 문장 나눔·합침 같은 사람 판단은 우연 수준으로만 검출됩니다.</li>
+                <li>온보딩 구매사 국문은 정확도 <b>2.3%</b> — 모듈별 편차가 큽니다.</li>
+                <li><b>야간 개선 후보 승인 0건</b> — 「후보 → 승인 → 반영 → 재현율 상승」 루프는 설계·가동 중이나 수치로 증명한 사례는 아직 없습니다.</li>
+                <li>측정 방식이 11-11에 바뀌어(바로 앞 짝 → 전 과정 짝 + 우연 기준) 이전 수치와 단순 비교할 수 없습니다.</li>
+                <li>운영 실패 기록: 야간 회차 프로세스 시작 실패 1회, 종료 로그 누락 2회, 화면 학습 최대 턴 초과 반복.</li>
+              </ul>
+            </div>
+            <div class="list-card plan">
+              <h4>고도화 계획</h4>
+              <ul>
+                <li><b>승인 루프 증명</b> — 개선 후보(22종으로 묶음) 중 1건을 승인·반영하고 같은 시험 짝으로 재측정</li>
+                <li>도입 전 수작업 시간 확보 → 01장 리드타임 표 완성</li>
+                <li>영문 이식 단계 시작·끝 시각 기록</li>
+                <li>야간 배치 실패 경보 강화 (시작·종료 로그 짝 검사)</li>
+              </ul>
+              <h4 style="margin-top:12px">이미 반영된 사람 피드백 → 규칙 사례</h4>
+              <ul>
+                <li>표 칸 단어 중간 끊김: 국문 57칸 중 44칸 → 도구 추가 뒤 <b>0칸</b></li>
+                <li>화면에 없는 버튼 인용 → 검사 코드 D5 · F63/F64</li>
+                <li>영문 개념 문단의 "you can" 남발 → 검사 E17</li>
+                <li>규칙판 해시 변경 후 같은 시험 자료 재측정 → 결과 동일 (재현성 확인)</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- ───────── 06 ───────── -->
+        <section id="s06" class="doc-section">
+          <div class="sec-head">
+            <p class="eyebrow">06 · Evidence</p>
+            <h2>실행 증빙 갤러리</h2>
+            <p>실제 구동 화면 캡처입니다. 이미지를 누르면 원본 크기로 열립니다.</p>
+          </div>
+          <div class="ph-grid">
+            <figure class="ph-card" style="margin:0">
+              <div class="ph-frame" data-src="assets/demo/agent-01-hook-block.png" data-alt="훅이 Word 도구 실행을 차단한 로그">
+                <span><span class="ph-icon" aria-hidden="true">⛔</span>캡처 준비 중</span>
+              </div>
+              <figcaption class="ph-cap"><h4>① 훅 차단 로그</h4><p>규칙 문서를 읽지 않은 상태에서 Word 도구 실행이 차단되는 장면</p></figcaption>
+            </figure>
+            <figure class="ph-card" style="margin:0">
+              <div class="ph-frame" data-src="assets/demo/agent-02-finish-chain.png" data-alt="마무리 체인 실행 로그">
+                <span><span class="ph-icon" aria-hidden="true">⏱</span>캡처 준비 중</span>
+              </div>
+              <figcaption class="ph-cap"><h4>② 마무리 체인 로그</h4><p>국·영 동시 실행과 단계별 소요 시간, 최종 관문 FAIL 0 · WARN 0</p></figcaption>
+            </figure>
+            <figure class="ph-card" style="margin:0">
+              <div class="ph-frame" data-src="assets/demo/agent-03-accuracy-sheet.png" data-alt="정확도 검증 엑셀 시트">
+                <span><span class="ph-icon" aria-hidden="true">📊</span>캡처 준비 중</span>
+              </div>
+              <figcaption class="ph-cap"><h4>③ 정확도 검증 엑셀</h4><p>사람 수정 diff 기준 재현율·정확도·우연 비교 시트</p></figcaption>
+            </figure>
+          </div>
+        </section>
+
+        <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px">
+          <a class="btn ghost small" href="project-valuation.html">← 이전: Project 01 기업가치평가</a>
+          <a class="btn primary small" href="project-ourcheck.html">다음: Project 03 아워체크 →</a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <p>© <span id="year"></span> SoYoung Back. 고객사·제품 보호를 위해 회사명·제품명·서버 정보·화면 코드는 가명 처리했습니다.</p>
+      <div class="footer-links"><a href="index.html">홈</a><a href="project-valuation.html">Project 01</a><a href="project-ourcheck.html">Project 03</a><a href="#top">위로</a></div>
+    </div>
+  </footer>
+  <script src="site.js"></script>
+</body>
+</html>

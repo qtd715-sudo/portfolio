@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="color-scheme" content="light dark" />
+  <meta name="description" content="아워체크 v2.0 — 청약 사전승인 및 자금 플랜 앱/웹 기획·설계·개발 케이스 스터디" />
+  <title>아워체크 · SoYoung Back</title>
+  <script>try{var t=localStorage.getItem('theme');if(t==='dark'||t==='light')document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hahmlet:wght@500;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="ourcheck.css" />
+</head>
+<body>
+  <header class="header">
+    <div class="container header-inner">
+      <a class="logo" href="index.html">SoYoung Back</a>
+      <nav class="nav" aria-label="주 메뉴">
+        <ul class="nav-list">
+          <li><a href="index.html">홈</a></li>
+          <li><a href="project-valuation.html">01 기업가치평가</a></li>
+          <li><a href="project-manual-agent.html">02 매뉴얼 자동화</a></li>
+          <li><a href="project-ourcheck.html" aria-current="page">03 아워체크</a></li>
+        </ul>
+        <div class="nav-tools">
+          <button type="button" class="theme-btn" aria-label="다크 모드로 전환">
+            <svg class="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+            <svg class="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+          </button>
+          <button class="nav-toggle" type="button" aria-label="메뉴 열기" aria-expanded="false"><span></span><span></span><span></span></button>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="page-hero">
+      <div class="container">
+        <p class="crumb"><a href="index.html#featured">← 포트폴리오</a><span>/</span><span>Project 03</span></p>
+        <p class="eyebrow">Project 03 · FinTech Product · AI · PM / PO</p>
+        <h1>아워체크(OurCheck) — 청약 자격 판정 앱 v1.0 · 자금 사전승인 설계 v2.0</h1>
+        <p class="lede">v1.0은 "이 공고, 내가 넣을 수 있나"에 답하는 앱으로 개발해 <b>Beta 테스트 중</b>입니다. v2.0 설계안은 한 질문을 더합니다 — <b>"당첨되면 살 수 있나."</b> 그리고 그 답을 대출 연결로 잇습니다.</p>
+        <div class="meta-row">
+          <span><b>성격</b>개인 앱 개발 — AI · PM / PO 핀테크 서비스 기획 역량 케이스</span>
+          <span><b>역할</b>기획 · 화면 설계 · 도메인 로직 설계 · 개발</span>
+          <span><b>설계서</b>v2.0 · 2026-09-14 · 12개 화면</span>
+          <span><b>플랫폼</b>Android 앱(Flutter) + 웹</span>
+          <span><b>개발</b>v1.0 · 빌드 0.1.4 · Beta</span>
+        </div>
+        <div class="tag-row" style="margin-top:14px">
+          <span class="status-badge">v1.0 Beta · 비공개 테스트</span>
+          <span class="tag">v2.0 설계안</span>
+          <span class="tag">Flutter</span><span class="tag">MyData</span><span class="tag">LTV / DSR</span><span class="tag">LLM 공고문 추출</span><span class="tag">On-device</span>
+        </div>
+        <div class="hero-cta">
+          <a class="btn primary" href="ourcheck-screens-v2.html">전체 화면설계서(12개 화면) 보기</a>
+          <a class="btn ghost" href="#s02">핵심 화면 바로 보기</a>
+        </div>
+      </div>
+    </section>
+
+    <div class="container doc-wrap">
+      <nav class="toc" aria-label="페이지 목차">
+        <h2>차례</h2>
+        <ol>
+          <li><a href="#s00"><span class="n">00</span>프로젝트 개요</a></li>
+          <li><a href="#s01"><span class="n">01</span>IA · 프라이버시</a></li>
+          <li><a href="#s02"><span class="n">02</span>핵심 화면</a></li>
+          <li><a href="#s03"><span class="n">03</span>도메인 로직</a></li>
+          <li><a href="#s04"><span class="n">04</span>테스트 갤러리</a></li>
+        </ol>
+      </nav>
+
+      <div class="doc-main">
+
+        <!-- ───────── 00 ───────── -->
+        <section id="s00" class="doc-section">
+          <div class="sec-head">
+            <p class="eyebrow">00 · Overview</p>
+            <h2>v1 → v2 — 자격 판정에서 자금 사전승인과 실행까지</h2>
+            <p>"청약 자격 판정" 앱을 <b>자금 사전승인 + 공고문 AI 해석 + 실행(대출 연결)</b>으로 넓힌 두 번째 설계입니다. v1의 9개 화면을 유지하고, 세 겹 판정과 실행을 위한 화면을 더했습니다.</p>
+          </div>
+          <div class="callout">
+            <b>지금 단계.</b> v1.0(자격 판정 · 캘린더 · 지도 · 정책 · 알림 · MY)은 개발을 마치고 Google Play 비공개 테스트 중입니다. 이 페이지의 v2.0(자금 사전승인 · 공고문 AI 해석 · 대출 연결)은 <b>설계안</b>이며 아직 개발 전입니다. 폰 목업과 <a href="ourcheck-screens-v2.html">전체 화면설계서</a>로 설계를 살펴볼 수 있고, v1.0 구동 화면은 <a href="#s04">04장</a>에 있습니다.
+          </div>
+          <div class="panel" style="margin-top:14px">
+            <div class="chg">
+              <span class="v">판정</span><span>7규칙 자격 판정(v1) 위에 <b>자금 사전승인</b>(LTV·DSR·정책대출·현금흐름)과 <b>공고문 AI 해석</b>(가점·추첨·전매제한·거주의무)을 얹었습니다. 결과는 공고별 <span class="state pre">승인</span> <span class="state cond">조건부</span> <span class="state only">자격만</span> <span class="state none">불가</span> 네 상태로 나옵니다.</span>
+              <span class="v">입력</span><span>수동 입력(v1)은 그대로 두고 <b>마이데이터 연결</b>을 선택지로 추가했습니다. 판정에 쓴 데이터 항목은 화면에 출처와 함께 남습니다.</span>
+              <span class="v">실행</span><span>조건부 판정의 부족분을 정책대출·주담대 상품에 잇는 <b>대출 연결</b> 화면. 앱 밖으로 나가는 유일한 지점이라, 나가기 전에 무엇을 넘기는지 보여 줍니다.</span>
+              <span class="v">시점</span><span>혼인·출산·전입 시점을 옮겨 보는 <b>가구 타임라인</b>. 특별공급 자격이 열리고 닫히는 날짜를 계산합니다.</span>
+              <span class="v">유지</span><span>캘린더 · 지도 · 정책 · 알림 · MY는 v1 골격 위에 사전승인 상태만 얹었습니다. 데이터는 여전히 기기에만 저장합니다.</span>
+            </div>
+          </div>
+          <h3>화면 구성 (12개)</h3>
+          <div class="tbl-scroll">
+            <table class="plain wide">
+              <thead><tr><th>ID</th><th>화면</th><th>v1 대비</th><th>핵심 데이터</th></tr></thead>
+              <tbody>
+                <tr><td><code>S01</code></td><td>온보딩 — 데이터 연결</td><td>변경</td><td>마이데이터 동의 / 수동 입력 폼</td></tr>
+                <tr><td><code>S02</code></td><td>홈 — 사전승인 카드</td><td>변경</td><td>승인 상태, 가용자금, 적격 공고</td></tr>
+                <tr><td><code>S03</code></td><td>전체 공고 — 상태 필터</td><td>변경</td><td>공고 × 4상태</td></tr>
+                <tr><td><code>S04</code></td><td>공고 상세 — 판정·자금·공고문·시세</td><td>변경</td><td>규칙 결과, 현금흐름, 추출 요건, 실거래</td></tr>
+                <tr><td><code>S05</code></td><td>자금 플랜</td><td><b>신규</b></td><td>LTV/DSR 한도, 정책대출 자격, 월별 현금흐름</td></tr>
+                <tr><td><code>S06</code></td><td>가구 타임라인</td><td><b>신규</b></td><td>혼인·출산·전입일 × 특공 자격</td></tr>
+                <tr><td><code>S07</code></td><td>대출 연결</td><td><b>신규</b></td><td>상품 후보, 넘길 항목, 제휴사 이동</td></tr>
+                <tr><td><code>S08–S12</code></td><td>캘린더 · 지도 · 정책/법령/정정 공고 · 알림 · MY</td><td>유지 / 변경</td><td>일정·마커·관보 × 승인 상태, 연결·동의 관리</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- ───────── 01 ───────── -->
+        <section id="s01" class="doc-section">
+          <div class="sec-head">
+            <p class="eyebrow">01 · IA &amp; Privacy</p>
+            <h2>정보구조와 온디바이스 프라이버시 아키텍처</h2>
+            <p>왼쪽이 소스, 가운데가 기기 안 판정, 오른쪽이 화면과 실행입니다. 개인 데이터는 가운데 상자를 벗어나지 않고, 맨 끝의 대출 연결만 사용자가 골라서 넘깁니다.</p>
+          </div>
+          <p class="scroll-hint">← 좌우로 밀어서 보기 →</p>
+          <div class="diagram">
+            <svg viewBox="0 0 960 400" role="img" aria-label="데이터 흐름: 공공 API와 마이데이터가 기기 안 판정 엔진으로 들어가고, 사전승인 결과가 화면과 대출 연결로 나간다">
+              <defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" style="fill:var(--ink-3)"/></marker></defs>
+              <text x="20" y="28" class="s">공개 데이터</text>
+              <rect class="box" x="20" y="40" width="200" height="34" rx="6"/><text x="32" y="62">청약홈 공고 · 주택형 · 규제지역</text>
+              <rect class="box" x="20" y="82" width="200" height="34" rx="6"/><text x="32" y="104">국토부 실거래가</text>
+              <rect class="box" x="20" y="124" width="200" height="34" rx="6"/><text x="32" y="146">행안부 관보 · 모집공고문 PDF</text>
+              <text x="20" y="196" class="s">본인 동의 데이터 (v2)</text>
+              <rect class="box a" x="20" y="208" width="200" height="34" rx="6"/><text x="32" y="230">공공마이데이터 — 세대·가족·주택</text>
+              <rect class="box a" x="20" y="250" width="200" height="34" rx="6"/><text x="32" y="272">금융 마이데이터 — 자산·부채·통장</text>
+              <rect class="box" x="20" y="292" width="200" height="34" rx="6"/><text x="32" y="314">수동 입력 (v1 방식, 항상 가능)</text>
+              <rect x="290" y="30" width="330" height="310" rx="12" fill="none" stroke-dasharray="5 4" style="stroke:var(--primary)"/>
+              <text x="304" y="52" class="s">기기 안 — 서버 없음, 저장은 기기에만</text>
+              <rect class="box p" x="310" y="70" width="290" height="44" rx="6"/><text x="324" y="88" class="h">① 자격 사전검증</text><text x="324" y="105" class="s">7규칙 × 유형별 차등 · 세대 단위</text>
+              <rect class="box p" x="310" y="126" width="290" height="44" rx="6"/><text x="324" y="144" class="h">② 자금 사전승인</text><text x="324" y="161" class="s">가용자금 · LTV/DSR · 정책대출 · 현금흐름</text>
+              <rect class="box p" x="310" y="182" width="290" height="44" rx="6"/><text x="324" y="200" class="h">③ 공고문 AI 해석</text><text x="324" y="217" class="s">가점/추첨 · 전매제한 · 거주의무 · 근거 문장</text>
+              <rect class="box" x="310" y="246" width="290" height="40" rx="6"/><text x="324" y="264" class="h">사전승인 상태 머신</text><text x="324" y="280" class="s">승인 · 조건부 · 자격만 · 불가 · 만료</text>
+              <rect class="box" x="310" y="298" width="290" height="30" rx="6"/><text x="324" y="318" class="s">로컬 저장 — 프로필 · 동의 내역 · 판정 캐시</text>
+              <text x="690" y="28" class="s">화면</text>
+              <rect class="box" x="690" y="40" width="250" height="34" rx="6"/><text x="702" y="62">S02 홈 · S03 전체 · S04 상세</text>
+              <rect class="box" x="690" y="82" width="250" height="34" rx="6"/><text x="702" y="104">S05 자금 플랜 · S06 타임라인</text>
+              <rect class="box" x="690" y="124" width="250" height="34" rx="6"/><text x="702" y="146">S08~S11 캘린더 · 지도 · 정책 · 알림</text>
+              <text x="690" y="220" class="s">실행 — 앱 밖으로 나가는 유일한 곳</text>
+              <rect class="box a" x="690" y="232" width="250" height="54" rx="6"/><text x="702" y="252" class="h">S07 대출 연결</text><text x="702" y="270" class="s">사용자가 고른 항목만 제휴사에 전달</text>
+              <line x1="220" y1="57" x2="310" y2="92"/><line x1="220" y1="99" x2="310" y2="100"/><line x1="220" y1="141" x2="310" y2="204"/>
+              <line x1="220" y1="225" x2="310" y2="95"/><line x1="220" y1="267" x2="310" y2="150"/><line x1="220" y1="309" x2="310" y2="148"/>
+              <line x1="600" y1="266" x2="690" y2="57"/><line x1="600" y1="266" x2="690" y2="99"/><line x1="600" y1="266" x2="690" y2="141"/>
+              <line x1="600" y1="270" x2="690" y2="259"/>
+            </svg>
+          </div>
+          <p class="diagram-caption">주황 상자 = 본인 동의가 필요한 데이터와 앱 밖으로 나가는 지점. 점선 = 기기 경계.</p>
+
+          <h3>사전승인 상태 정의 — 다섯 상태만 쓴다</h3>
+          <div class="tbl-scroll">
+            <table class="plain wide">
+              <thead><tr><th>상태</th><th>조건</th><th>카드 표시</th><th>다음 행동</th></tr></thead>
+              <tbody>
+                <tr><td><span class="state pre">승인</span></td><td>자격 필수 규칙 전부 통과 <b>그리고</b> 자금 플랜의 모든 납입 시점에서 현금 + 확정 대출 ≥ 납입액</td><td>초록 배지 · 왼쪽 초록 띠</td><td>일정 알림 켜기 · 캘린더 등록</td></tr>
+                <tr><td><span class="state cond">조건부</span></td><td>자격 통과, 자금은 <b>추가 대출</b>이 있어야 맞음 (부족분 &gt; 0, 정책대출·주담대 후보 있음)</td><td>주황 배지 "조건부 · 3,000만 부족"</td><td>S07 대출 연결</td></tr>
+                <tr><td><span class="state only">자격만</span></td><td>자격 통과, 자금 불가(후보 대출로도 부족) 또는 임대 공고(자금 판정 제외)</td><td>회색 배지 "자격만"</td><td>S06 타임라인 · 예산 조정</td></tr>
+                <tr><td><span class="state none">불가</span></td><td>자격 필수 규칙 중 하나 이상 실패</td><td>왼쪽 빨간 띠 · "막는 요건 — ○○"</td><td>S04 판정 근거 확인</td></tr>
+                <tr><td><span class="state exp">만료</span></td><td>마이데이터 갱신 90일 경과 또는 공고 정정으로 재판정 필요</td><td>흐림 + "갱신 필요" 버튼</td><td>S12 데이터 다시 받기</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="two-up" style="margin-top:14px">
+            <div class="list-card">
+              <h4>프라이버시 설계 원칙</h4>
+              <ul>
+                <li>앱 서버 없음 — 판정·저장은 전부 기기 안</li>
+                <li>동의는 항목별로. "전체 동의" 버튼을 맨 위에 두지 않음</li>
+                <li>배우자 원본은 가져오지 않음 — 배우자 기기에서 만든 <b>합산 코드</b>(요약값)만</li>
+                <li>알림·공유 이미지에 금액·세대·출산 예정 없음</li>
+              </ul>
+            </div>
+            <div class="list-card">
+              <h4>웹은 어디까지</h4>
+              <ul>
+                <li>웹은 마이데이터를 붙일 수 없음(도메인 인증·CORS)</li>
+                <li>수동 입력 + 공개 데이터로 ① 자격과 ② 자금의 수동 부분까지 계산</li>
+                <li>마이데이터·대출 연결은 "앱에서 이어서"로 안내</li>
+                <li>판정 코드의 정본은 앱, 웹은 사본</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- ───────── 02 ───────── -->
+        <section id="s02" class="doc-section">
+          <div class="sec-head">
+            <p class="eyebrow">02 · Screen Showcase</p>
+            <h2>핵심 화면 설계 및 인터랙션 <span class="tag" style="vertical-align:middle">v2.0 설계안</span></h2>
+            <p>12개 화면 중 핵심 다섯 장면입니다. 탭을 눌러 화면을 바꾸면 폰 목업과 설계 주석이 함께 바뀝니다(←/→ 키로도 이동할 수 있습니다).</p>
+          </div>
+
+          <div class="screen-tabs" role="tablist" aria-label="핵심 화면" data-tabs>
+            <button type="button" role="tab" id="t-s01" aria-controls="p-s01" aria-selected="true"><span class="sid">S01</span><span class="snm">데이터 연결</span></button>
+            <button type="button" role="tab" id="t-s02" aria-controls="p-s02" aria-selected="false"><span class="sid">S02</span><span class="snm">홈 사전승인 카드</span></button>
+            <button type="button" role="tab" id="t-s04" aria-controls="p-s04" aria-selected="false"><span class="sid">S04</span><span class="snm">공고문 AI 추출</span></button>
+            <button type="button" role="tab" id="t-s05" aria-controls="p-s05" aria-selected="false"><span class="sid">S05</span><span class="snm">자금 플랜</span></button>
+            <button type="button" role="tab" id="t-s06" aria-controls="p-s06" aria-selected="false"><span class="sid">S06 · S07</span><span class="snm">타임라인 &amp; 대출 연결</span></button>
+          </div>
+
+          <!-- S01 -->
+          <div class="screen-panel" role="tabpanel" id="p-s01" aria-labelledby="t-s01">
+            <div class="panel-head"><h3>S01 온보딩 — 데이터 연결</h3><p>첫 실행에 한 번. 마이데이터로 채우거나 v1처럼 손으로 넣는 두 갈래를 나란히 놓고 고르게 합니다. 어느 쪽이든 3분 안에 홈에 도착합니다.</p></div>
+            <div class="split">
+              <div class="phone" aria-hidden="true">
+                <div class="status"><span>9:41</span><span>▮▮▮</span></div>
+                <div class="appbar"><span>내 조건 입력</span><span class="ico">1 / 4</span></div>
+                <div class="screen">
+                  <div class="gauge"><span class="on"></span><span></span><span></span><span></span></div>
+                  <div class="title-s" style="font-size:13px">어떻게 채울까요</div>
+                  <div class="card" style="border-color:var(--primary)">
+                    <div class="row between"><b>마이데이터로 한 번에</b><span class="badge pre">추천</span></div>
+                    <div class="sub-s" style="margin-top:3px">자산·부채·청약통장·세대 정보를 본인 인증 뒤 받아옵니다. 받은 원본은 이 기기에만 저장됩니다.</div>
+                    <div class="chips" style="margin-top:6px"><span class="chip">은행 · 증권</span><span class="chip">청약통장</span><span class="chip">주민등록 · 가족관계</span><span class="chip">주택 소유</span></div>
+                    <div class="btn-p" style="margin-top:8px">본인 인증하고 연결</div>
+                  </div>
+                  <div class="card">
+                    <div class="row between"><b>직접 입력</b><span class="badge only">3분</span></div>
+                    <div class="sub-s" style="margin-top:3px">자산 합계, 거주지, 무주택 여부, 통장 정보를 넣습니다. 나중에 연결로 바꿀 수 있습니다.</div>
+                    <div class="btn-o" style="margin-top:8px">직접 입력으로 시작</div>
+                  </div>
+                  <div class="sub-s" style="text-align:center;margin-top:auto">서버가 없습니다. 입력·수신한 정보는 어디로도 전송되지 않습니다.</div>
+                </div>
+              </div>
+              <div class="notes">
+                <div class="note"><span class="cn">1</span><div><h4>둘 다 같은 프로필을 만든다</h4><p>마이데이터든 수동이든 결과는 같은 <code>Profile</code>. 판정 엔진은 출처를 모르고, 출처는 항목별 <b>출처 태그</b>로만 남깁니다.</p><span class="src">Profile.sources[field] = mydata | manual</span></div></div>
+                <div class="note"><span class="cn">2</span><div><h4>동의는 항목별로</h4><p>받을 항목을 체크리스트로 보여 주고, 끈 항목은 수동 입력 칸으로 바뀝니다.</p></div></div>
+                <div class="note"><span class="cn">3</span><div><h4>세대원 정보는 본인 것만</h4><p>배우자 자산은 배우자가 자기 기기에서 연결해 <b>합산 코드</b>로 합칩니다. 배우자 원본을 내 기기로 가져오지 않습니다.</p></div></div>
+                <div class="note"><span class="cn">4</span><div><h4>실패해도 홈에 간다</h4><p>연결이 중간에 끊기면 받은 항목까지 저장하고 나머지는 수동 칸으로. 온보딩은 항상 홈으로 끝납니다.</p></div></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- S02 -->
+          <div class="screen-panel" role="tabpanel" id="p-s02" aria-labelledby="t-s02" hidden>
+            <div class="panel-head"><h3>S02 홈 — 사전승인 카드</h3><p>v1의 "가용 자금" 카드가 "사전승인 상태"로 바뀝니다 — 자격 · 자금 · 특공 세 줄과 갱신일. 아래에는 신청할 수 있는 단지만 둡니다.</p></div>
+            <div class="split">
+              <div class="phone" aria-hidden="true">
+                <div class="status"><span>9:41</span><span>▮▮▮</span></div>
+                <div class="appbar"><span>오늘의 청약</span><span class="ico">🔔</span></div>
+                <div class="screen">
+                  <div class="card">
+                    <div class="row between"><span class="sub-s" style="font-weight:700">내 사전승인</span><span class="sub-s">갱신 오늘 06:00</span></div>
+                    <div class="kv" style="margin-top:6px">
+                      <b>자격</b><span><span class="ok">✓</span> 무주택 10.4년 · 서울 6년 · 통장 1순위</span>
+                      <b>자금</b><span><span class="ok">✓</span> <b>5억 3,000만</b> <span class="sub-s">현금 1억 3,000만 + 대출 4억</span></span>
+                      <b>특공</b><span>신혼부부 <span class="ok">✓</span> · 생애최초 <span class="ok">✓</span> · 신생아 <span style="color:var(--ink-3)">— 2027-02 이후</span></span>
+                    </div>
+                    <div class="row" style="margin-top:8px;gap:6px"><div class="btn-o" style="flex:1">자금 플랜</div><div class="btn-o" style="flex:1">타임라인</div></div>
+                  </div>
+                  <div class="row between"><b style="font-size:13px">신청 가능한 단지</b><span class="row" style="gap:8px"><span class="ok" style="font-size:11px">3건</span><span style="font-size:10.5px;color:var(--primary)">전체 공고 →</span></span></div>
+                  <div class="card lead">
+                    <div class="row between"><span class="row"><span class="pill apt">아파트</span><span class="badge pre">승인</span></span><span style="font-size:9.5px;color:var(--accent);font-weight:700">접수 D-4</span></div>
+                    <div class="title-s" style="margin-top:5px">양주회천지구 A-26블록 공공분양</div>
+                    <div class="sub-s">경기 양주시 · 3억 5,093만 ~ 4억 9,201만 · 전용 59.7㎡~ · 국민</div>
+                    <div class="sub-s">계약금 3,509만 · 중도금 60% 대출 가능 · 잔금 2028-06</div>
+                  </div>
+                  <div class="card lead" style="border-left-color:var(--accent)">
+                    <div class="row between"><span class="row"><span class="pill apt">아파트</span><span class="badge cond">조건부 · 3,000만 부족</span></span><span style="font-size:9.5px;color:var(--accent);font-weight:700">9/17까지</span></div>
+                    <div class="title-s" style="margin-top:5px">인천계양지구 A6블록 공공분양</div>
+                    <div class="sub-s">인천 계양구 · 5억 466만 ~ 7억 1,654만 · 전용 59.7㎡~</div>
+                    <div class="sub-s" style="color:var(--primary)">신생아특례 추가 한도로 메울 수 있음 →</div>
+                  </div>
+                </div>
+                <div class="tabbar"><span class="on">홈</span><span>캘린더</span><span>지도</span><span>정책</span><span>MY</span></div>
+              </div>
+              <div class="notes">
+                <div class="note"><span class="cn">1</span><div><h4>상태 카드는 세 줄</h4><p>자격 · 자금 · 특공. 각 줄은 판정 근거를 한 문장으로 요약합니다.</p></div></div>
+                <div class="note"><span class="cn">2</span><div><h4>갱신일이 보인다</h4><p>마이데이터는 90일, 공개 데이터는 매일. 둘 중 오래된 쪽을 표시하고, 만료면 카드가 흐려집니다.</p><span class="src">Preapproval.refreshedAt = min(mydata.at, data.at)</span></div></div>
+                <div class="note"><span class="cn">3</span><div><h4>카드에 자금 한 줄이 늘었다</h4><p>계약금 · 중도금 대출 가능 여부 · 잔금 시점 — "당첨되면 살 수 있나"의 요약. 조건부면 <b>부족분 + 메울 방법</b>으로 바뀝니다.</p></div></div>
+                <div class="note"><span class="cn">4</span><div><h4>홈에는 승인·조건부만</h4><p>조건부는 <b>실행하면 되는 것</b>이라 홈에 둡니다. 0건이면 가장 가까운 대안과 "얼마가 더 필요한지"를 보여 줍니다.</p></div></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- S04 -->
+          <div class="screen-panel" role="tabpanel" id="p-s04" aria-labelledby="t-s04" hidden>
+            <div class="panel-head"><h3>S04 공고 상세 — 공고문 AI 추출 탭</h3><p>긴 한 화면을 판정 · 자금 · 공고문 · 시세 네 탭으로 나눴습니다. 공고문 탭은 모집공고문 PDF에서 LLM이 추출한 요건을 <b>원문 문장과 쪽수</b>와 함께 보여 줍니다.</p></div>
+            <div class="split">
+              <div class="phone" aria-hidden="true">
+                <div class="status"><span>9:41</span><span>▮▮▮</span></div>
+                <div class="appbar"><span>‹ 공고 상세</span><span class="ico">↗ 청약홈</span></div>
+                <div class="screen">
+                  <div class="card lead">
+                    <div class="row between"><span class="row"><span class="pill apt">아파트</span><span class="pill">국민주택</span><span class="badge pre">승인</span></span><span style="font-size:9.5px;color:var(--accent);font-weight:700">D-4</span></div>
+                    <div class="title-s" style="margin-top:4px">양주회천지구 A-26블록 공공분양주택</div>
+                    <div class="sub-s">경기 양주시 · 3억 5,093만 ~ 4억 9,201만 · 적합도 79</div>
+                  </div>
+                  <div class="ptabs"><span>판정</span><span>자금</span><span class="on">공고문</span><span>시세</span></div>
+                  <div class="card">
+                    <div class="row between"><b style="font-size:11.5px">공고문에서 읽은 요건</b><span class="sub-s">AI 추출 · 근거 표시</span></div>
+                    <div class="kv" style="margin-top:6px">
+                      <b>일반공급</b><span>가점 <b>—</b> · 추첨 <b>—</b> · 국민주택 <b>순차제</b></span>
+                      <b>전매제한</b><span>당첨자 발표일부터 <b>3년</b></span>
+                      <b>거주의무</b><span><b>3년</b> (공공택지 분양가상한제)</span>
+                      <b>재당첨 제한</b><span><b>10년</b> — 세대 전원</span>
+                      <b>중도금</b><span>60% · 6회 · <b>대출 알선</b> 있음</span>
+                    </div>
+                  </div>
+                  <div class="quote">"…당첨자로 선정된 세대는 <mark>당첨자 발표일로부터 3년간</mark> 전매가 제한되며, <mark>입주 후 3년의 실거주 의무</mark>가 있습니다." — 공고문 12쪽 ③항</div>
+                  <div class="card" style="border-color:var(--accent)">
+                    <div class="row between"><b style="font-size:11px">이 공고에서 특히 볼 것</b><span class="badge cond">주의</span></div>
+                    <div class="sub-s">재당첨 제한 10년은 세대원 전체에 적용됩니다. 배우자가 2019년 이후 당첨 이력이 있으면 자격이 사라집니다 → 세대 당첨 이력 확인</div>
+                  </div>
+                  <div class="sub-s" style="text-align:center">추출 신뢰도 높음 · 원문 PDF 열기 · 잘못 읽었으면 알려 주기</div>
+                </div>
+                <div class="tabbar"><span class="on">홈</span><span>캘린더</span><span>지도</span><span>정책</span><span>MY</span></div>
+              </div>
+              <div class="notes">
+                <div class="note"><span class="cn">1</span><div><h4>근거 문장이 핵심</h4><p>추출값마다 <b>원문 문장</b>과 <b>쪽수</b>를 붙입니다. 신뢰도가 낮으면 값 대신 "공고문 확인"을 쓰고 문장만 보여 줍니다.</p><span class="src">NoticeExtract{field, value, quote, page, confidence}</span></div></div>
+                <div class="note"><span class="cn">2</span><div><h4>"특히 볼 것"은 내 조건과 교차한 것만</h4><p>재당첨 제한이 있다고 다 경고하지 않습니다. 내 세대에 당첨 이력이 있을 수 있거나 거주의무가 내 계획과 충돌할 때만.</p></div></div>
+                <div class="note"><span class="cn">3</span><div><h4>판정 탭 = v1 7규칙</h4><p>PASS/FAIL 목록, 지역 "참고", 특공 가점, 가점·추첨 세대수(계산값 표시)는 v1 그대로.</p></div></div>
+                <div class="note"><span class="cn">4</span><div><h4>"잘못 읽었으면 알려 주기"</h4><p>사용자 정정은 기기에 저장되고 다음 판정에 우선합니다. 서버가 없어 모으지는 않습니다.</p></div></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- S05 -->
+          <div class="screen-panel" role="tabpanel" id="p-s05" aria-labelledby="t-s05" hidden>
+            <div class="panel-head"><h3>S05 자금 플랜 — 당첨되면 살 수 있나<span class="badge-new">신규</span></h3><p>공고 하나의 납입 일정에 내 현금과 대출을 얹어 봅니다. 위는 한도, 가운데는 타임라인, 아래는 부족분과 메울 방법. 모든 숫자는 출처를 눌러 볼 수 있습니다.</p></div>
+            <div class="split">
+              <div class="phone" aria-hidden="true">
+                <div class="status"><span>9:41</span><span>▮▮▮</span></div>
+                <div class="appbar"><span>‹ 자금 플랜</span><span class="ico">인천계양 A6</span></div>
+                <div class="screen">
+                  <div class="card">
+                    <div class="row between"><b style="font-size:11.5px">분양가 5억 8,200만 (59A)</b><span class="badge cond">조건부</span></div>
+                    <div class="kv" style="margin-top:6px">
+                      <b>현금</b><span>1억 3,000만 <span class="sub-s">(예금 9,800만 + 주식 3,200만 · 마이데이터)</span></span>
+                      <b>주담대 한도</b><span>2억 9,100만 <span class="sub-s">LTV 50% 조정대상 · 스트레스 DSR 40%</span></span>
+                      <b>정책대출</b><span>신생아특례 <b>가능</b> 최대 5억 · 디딤돌 소득 초과</span>
+                      <b>합계</b><span><b>5억 5,200만</b> → 부족 <span class="no">3,000만</span></span>
+                    </div>
+                  </div>
+                  <div class="card">
+                    <b style="font-size:11px">납입 타임라인</b>
+                    <div class="tl" style="margin-top:6px">
+                      <span class="lab">26-10 계약</span><div class="bar"><i style="width:10%"></i></div><span class="amt">5,820만 ✓</span>
+                      <span class="lab">27-02 중1</span><div class="bar"><i style="width:10%"></i><i class="loan" style="left:10%;width:10%"></i></div><span class="amt">5,820만 ✓</span>
+                      <span class="lab">27-08 중2</span><div class="bar"><i class="loan" style="left:20%;width:10%"></i></div><span class="amt">5,820만 ✓</span>
+                      <span class="lab">…</span><div class="bar"><i class="loan" style="left:30%;width:30%"></i></div><span class="amt">중도금 60%</span>
+                      <span class="lab">29-03 잔금</span><div class="bar"><i class="loan" style="left:60%;width:35%"></i><i style="left:95%;width:5%;background:var(--fail)"></i></div><span class="amt" style="color:var(--fail)">3,000만 부족</span>
+                    </div>
+                    <div class="row" style="gap:8px;margin-top:6px;font-size:9px;color:var(--ink-3)"><span>■ 현금</span><span style="color:var(--accent)">■ 대출</span><span style="color:var(--fail)">■ 부족</span></div>
+                  </div>
+                  <div class="card" style="border-color:var(--primary)">
+                    <b style="font-size:11px">메우는 방법</b>
+                    <div class="sub-s" style="margin-top:3px">① 신생아특례 한도 내 <b>3,000만 추가</b> — 금리 1.6~3.3% · 2027-02 출산 예정 기준 <span class="ok">자격 ✓</span></div>
+                    <div class="sub-s">② 잔금 시점 전세보증금 반환 <b>4,000만</b> 반영 — 입력 필요</div>
+                    <div class="btn-p" style="margin-top:7px">① 사전 한도 조회하러 가기 →</div>
+                  </div>
+                </div>
+                <div class="tabbar"><span class="on">홈</span><span>캘린더</span><span>지도</span><span>정책</span><span>MY</span></div>
+              </div>
+              <div class="notes">
+                <div class="note"><span class="cn">1</span><div><h4>한도는 규제지역 값에서 나온다</h4><p>LTV는 공고의 규제지역 플래그와 주택 가격 구간으로, DSR은 소득·기존 부채와 스트레스 금리로 계산. 상수는 한 곳에 두고 화면에 "적용 기준일"을 찍습니다.</p><span class="src">LoanRules.ltv(zone, price, firstHome) · dsr(income, debts, stressRate)</span></div></div>
+                <div class="note"><span class="cn">2</span><div><h4>정책대출은 자격부터</h4><p>디딤돌·보금자리론·신생아특례·신혼부부 전용 상품의 소득·자산·가격·면적 요건을 대조해 <b>가능 / 소득 초과 / 가격 초과</b>로 표시합니다.</p></div></div>
+                <div class="note"><span class="cn">3</span><div><h4>부족분은 시점별로</h4><p>합계가 맞아도 특정 시점에 모자랄 수 있습니다. 각 납입일의 누적 잔액이 처음 음수가 되는 시점을 부족으로 잡습니다.</p></div></div>
+                <div class="note"><span class="cn">4</span><div><h4>"메우는 방법"은 실행 가능한 것만</h4><p>자격이 되는 정책대출 추가 한도, 사용자가 넣을 수 있는 예정 자금만. "부모 지원"처럼 확인할 수 없는 항목은 제안하지 않습니다.</p></div></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- S06 + S07 -->
+          <div class="screen-panel" role="tabpanel" id="p-s06" aria-labelledby="t-s06" hidden>
+            <div class="panel-head"><h3>S06 가구 타임라인 &amp; S07 대출 연결<span class="badge-new">신규</span></h3><p>"언제 하면 자격이 열리나"를 시점 슬라이더로 답하고(S06), 조건부 판정의 부족분은 상품으로 잇되 넘기는 항목을 사용자가 고르게 합니다(S07).</p></div>
+            <div class="split duo">
+              <div class="phone" aria-hidden="true">
+                <div class="status"><span>9:41</span><span>▮▮▮</span></div>
+                <div class="appbar"><span>‹ 가구 타임라인</span><span class="ico">초기화</span></div>
+                <div class="screen">
+                  <div class="card">
+                    <div class="row between"><b style="font-size:11px">혼인신고</b><span class="sub-s">2023-05-20 (실제)</span></div>
+                    <div class="slider"><i style="left:38%"></i></div>
+                    <div class="row between"><b style="font-size:11px">첫 아이 출생</b><span class="sub-s" style="color:var(--primary)">2027-02 (예정 · 가정)</span></div>
+                    <div class="slider"><i style="left:71%"></i></div>
+                    <div class="row between"><b style="font-size:11px">서울 전입</b><span class="sub-s">2020-01-01 (실제)</span></div>
+                    <div class="slider"><i style="left:12%"></i></div>
+                  </div>
+                  <div class="card">
+                    <b style="font-size:11px">특별공급 자격 — 2026-09 기준</b>
+                    <div class="kv" style="margin-top:6px">
+                      <b>신혼부부</b><span><span class="ok">열림</span> 혼인 7년 이내 · <b>2030-05-19</b>까지</span>
+                      <b>신생아</b><span><span style="color:var(--ink-3)">닫힘</span> → 출생 시 열림 · <b>2027-02 ~ 2029-02</b></span>
+                      <b>생애최초</b><span><span class="ok">열림</span> 세대 전원 무주택 · 5년 이상 소득세 납부</span>
+                      <b>소득 기준</b><span>맞벌이 합산 <b>월 1,040만</b> = 도시근로자 <b>140%</b> 구간</span>
+                    </div>
+                  </div>
+                  <div class="card" style="border-color:var(--accent)">
+                    <b style="font-size:11px">이 조합으로 열리는 공고</b>
+                    <div class="sub-s" style="margin-top:3px">지금 3건 → 2027-02 이후 <b>5건</b> (신생아 특공 2건 추가)</div>
+                    <div class="btn-o" style="margin-top:7px">2027-02 기준으로 공고 보기</div>
+                  </div>
+                </div>
+                <div class="tabbar"><span>홈</span><span>캘린더</span><span>지도</span><span>정책</span><span class="on">MY</span></div>
+              </div>
+              <div class="phone" aria-hidden="true">
+                <div class="status"><span>9:41</span><span>▮▮▮</span></div>
+                <div class="appbar"><span>‹ 대출 연결</span><span class="ico">부족 3,000만</span></div>
+                <div class="screen">
+                  <div class="card">
+                    <b style="font-size:11.5px">맞는 상품</b>
+                    <div class="card" style="margin-top:6px;border-color:var(--primary)">
+                      <div class="row between"><b>신생아특례 디딤돌</b><span class="badge pre">자격 ✓</span></div>
+                      <div class="sub-s">최대 5억 · 1.6~3.3% · 소득 1.3억 이하 · 주택 9억 이하 · 출생 2년 내</div>
+                    </div>
+                    <div class="card" style="margin-top:6px">
+                      <div class="row between"><b>중도금 집단대출</b><span class="badge only">공고문 확인</span></div>
+                      <div class="sub-s">60% · 6회 · 자금 플랜에 이미 반영</div>
+                    </div>
+                  </div>
+                  <div class="card" style="border-color:var(--accent)">
+                    <b style="font-size:11px">제휴사로 넘길 항목 — 골라 주세요</b>
+                    <div class="kv" style="margin-top:6px">
+                      <span class="toggle"></span><span>필요 금액 3,000만 · 잔금 시점 2029-03</span>
+                      <span class="toggle"></span><span>공고 정보 (인천계양 A6 · 분양가 5억 8,200만)</span>
+                      <span class="toggle off"></span><span>소득·부채 요약</span>
+                      <span class="toggle off"></span><span>세대 구성 · 출생 예정</span>
+                    </div>
+                    <div class="sub-s" style="margin-top:5px">원본 마이데이터는 넘기지 않습니다.</div>
+                  </div>
+                  <div class="btn-p">○○은행 사전 한도 조회로 이동 ↗</div>
+                  <div class="sub-s" style="text-align:center">아무것도 넘기지 않고 이동 · 다른 상품 보기</div>
+                </div>
+                <div class="tabbar"><span class="on">홈</span><span>캘린더</span><span>지도</span><span>정책</span><span>MY</span></div>
+              </div>
+              <div class="notes">
+                <div class="note"><span class="cn">1</span><div><h4>실제와 가정을 구분한다</h4><p>마이데이터·입력값은 "실제", 사용자가 옮긴 값은 "가정". 가정은 저장하지 않고 이 화면 안에서만 삽니다.</p><span class="src">Profile.withAssumptions({...}) — 저장 안 함</span></div></div>
+                <div class="note"><span class="cn">2</span><div><h4>규칙마다 기간 창(window)</h4><p>신혼 7년, 신생아 2년, 생애최초 소득세 5년. 각 규칙은 <code>(열리는 날, 닫히는 날)</code>을 돌려주고 화면은 그 두 날짜만 보여 줍니다.</p></div></div>
+                <div class="note"><span class="cn">3</span><div><h4>넘기는 항목은 기본 최소</h4><p>필요 금액·시점과 공고 정보만 켜져 있고, 소득·세대는 꺼져 있습니다. 켜도 요약값만, 원본은 어떤 경우에도 넘기지 않습니다.</p><span class="src">Handoff{amount, dueAt, notice, income?: summary, household?: summary}</span></div></div>
+                <div class="note"><span class="cn">4</span><div><h4>광고와 판정을 섞지 않는다</h4><p>상품 순서는 자격·금리 순이지 수수료 순이 아닙니다. 제휴 형태와 수수료 수취 여부를 화면에 한 줄로 밝힙니다.</p></div></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ───────── 03 ───────── -->
+        <section id="s03" class="doc-section">
+          <div class="sec-head">
+            <p class="eyebrow">03 · Domain Logic</p>
+            <h2>도메인 로직 및 공통 규칙</h2>
+            <p>판정은 앱의 판정 엔진 한 곳이 정본이고, 모든 화면은 그 결과와 근거를 보여 주기만 합니다.</p>
+          </div>
+          <div class="rule-grid">
+            <div class="rule-card">
+              <h4>① 7규칙 자격 판정 (v1 계승)</h4>
+              <p>공고 유형별로 차등 적용하고 세대 단위로 봅니다. 여러 규칙이 실패해도 카드에는 <b>첫 번째 필수 실패</b> 한 줄만 보이며, 순서는 고정입니다.</p>
+              <div class="order"><span>유형</span><i>→</i><span>일정</span><i>→</i><span>무주택</span><i>→</i><span>통장</span><i>→</i><span>자금</span></div>
+              <div class="formula">blockers[0].label + reason</div>
+            </div>
+            <div class="rule-card">
+              <h4>② LTV / DSR 한도 계산</h4>
+              <ul>
+                <li>LTV — 공고의 규제지역 플래그 × 주택 가격 구간 × 생애최초 여부</li>
+                <li>DSR — 소득 · 기존 부채 · 스트레스 금리</li>
+                <li>상수는 한 곳에 두고 "적용 기준일"을 화면에 표시</li>
+              </ul>
+              <div class="formula">LoanRules.ltv(zone, price, firstHome) · dsr(income, debts, stressRate)</div>
+            </div>
+            <div class="rule-card">
+              <h4>③ 시점별 현금흐름과 부족분</h4>
+              <p>납입 일정은 공고문 추출값을 쓰고, 없으면 기본값(계약 10% · 중도 60% · 잔금 30%)을 쓰되 "가정"으로 표시합니다. 각 납입일에 아래 값을 계산해 처음 음수가 되는 시점을 부족으로 잡습니다.</p>
+              <div class="formula">현금누적 + 확정대출 − 납입누적 &lt; 0 → 부족 시점</div>
+            </div>
+            <div class="rule-card">
+              <h4>④ 근거 표시 원칙</h4>
+              <ul>
+                <li>판정 값 옆에 규칙 코드 · 조문 · 공고문 문장 · 데이터 출처 중 하나 이상</li>
+                <li>근거 없는 숫자는 "가정"으로 표시</li>
+                <li>모든 값에 출처 태그(공공 · 금융 · 배우자 · 입력)</li>
+                <li>임대 공고는 자금 판정 제외 — 보증금을 분양가 잣대로 재지 않음</li>
+              </ul>
+            </div>
+          </div>
+          <h3>화면을 가로지르는 공통 규칙</h3>
+          <div class="tbl-scroll">
+            <table class="plain mid">
+              <thead><tr><th>규칙</th><th>내용</th></tr></thead>
+              <tbody>
+                <tr><td>상태 배지</td><td>다섯 상태만. 카드 왼쪽 띠 색 = 배지 색. 상태는 색 + 글자로 함께 표시(접근성)</td></tr>
+                <tr><td>숫자 표기</td><td>만 원 단위, 억 단위 구분(5억 3,000만). 비율은 정수 %, 금리는 소수 1자리</td></tr>
+                <tr><td>빈 상태</td><td>"없습니다"로 끝내지 않는다 — 가장 가까운 대안(자격만 1건, 필요 금액, 열리는 날짜)</td></tr>
+                <tr><td>오류</td><td>키 없음 · 네트워크 · 파싱 실패를 구분. 데이터가 없는 것과 못 받은 것을 섞지 않는다</td></tr>
+                <tr><td>규칙 상수 갱신</td><td>법령 개정은 사람이 상수 → 테스트 → 문서를 함께 고친다. 앱은 "갱신 예정"만 표시</td></tr>
+                <tr><td>면책</td><td>상세·MY 하단에 "판정은 참고용, 최종 자격은 모집공고문" 고정 문구</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- ───────── 04 ───────── -->
+        <section id="s04" class="doc-section">
+          <div class="sec-head">
+            <p class="eyebrow">04 · Test Gallery</p>
+            <h2>테스트 화면 갤러리</h2>
+            <p>v1.0 구동 화면입니다(2026-09 · 11 캡처, 다크 모드 포함). v2.0의 사전승인 카드 · 자금 플랜 · 대출 연결 화면은 설계 단계이며, 개발 후 이 자리에 더합니다.</p>
+          </div>
+          <div class="proof-card">
+            <div class="ph-frame proof-shot" data-src="assets/proof/play-console-closed-test.png" data-alt="Google Play Console 앱 목록 — Sy Value, 아워체크 모두 비공개 테스트">
+              <span><span class="ph-icon" aria-hidden="true">▶</span>Play Console 캡처</span>
+            </div>
+            <div class="proof-body">
+              <span class="status-badge">v1.0 Beta · 비공개 테스트</span>
+              <h4>Google Play 비공개 테스트 트랙 등록</h4>
+              <p>Google Play Console에 <code>com.ourcheck.app</code>(아워체크)로 등록해 비공개 테스트(Closed testing) 단계로 운영 중입니다. 공개 출시 전, 초대한 테스터 대상으로 실기기 검증을 하고 있습니다.</p>
+            </div>
+          </div>
+          <div class="build-strip">
+            <span><b>버전</b>v1.0 · Android 빌드 0.1.4</span>
+            <span><b>프레임워크</b>Flutter</span>
+            <span><b>알림</b>로컬 알림(기기 안 예약)</span>
+            <span><b>배포</b>Google Play 비공개 테스트</span>
+          </div>
+          <div class="shot-grid">
+            <figure class="shot">
+              <img src="assets/ourcheck/v1-01-home.jpg" width="540" height="960" loading="lazy" alt="아워체크 v1 홈 화면 — 가용 자금 카드 · 신청 가능한 단지 3건" />
+              <figcaption><b>홈</b><span>가용 자금 카드 · 신청 가능한 단지 3건</span></figcaption>
+            </figure>
+            <figure class="shot">
+              <img src="assets/ourcheck/v1-02-all.jpg" width="540" height="960" loading="lazy" alt="아워체크 v1 전체 공고 화면 — 전체 / 신청 가능 / 요건 미달 필터" />
+              <figcaption><b>전체 공고</b><span>전체 / 신청 가능 / 요건 미달 필터</span></figcaption>
+            </figure>
+            <figure class="shot">
+              <img src="assets/ourcheck/v1-03-detail.jpg" width="540" height="960" loading="lazy" alt="아워체크 v1 공고 상세 화면 — 7규칙 판정 근거 PASS/FAIL" />
+              <figcaption><b>공고 상세</b><span>7규칙 판정 근거 PASS/FAIL</span></figcaption>
+            </figure>
+            <figure class="shot">
+              <img src="assets/ourcheck/v1-04-calendar.jpg" width="540" height="960" loading="lazy" alt="아워체크 v1 캘린더 화면 — 특별공급 · 1순위 · 접수 · 발표 일정 점" />
+              <figcaption><b>캘린더</b><span>특별공급 · 1순위 · 접수 · 발표 일정 점</span></figcaption>
+            </figure>
+            <figure class="shot">
+              <img src="assets/ourcheck/v1-05-policy.jpg" width="540" height="960" loading="lazy" alt="아워체크 v1 정책 · 법령 화면 — 관보 입법예고 피드 · 규칙 확인 배지" />
+              <figcaption><b>정책 · 법령</b><span>관보 입법예고 피드 · 규칙 확인 배지</span></figcaption>
+            </figure>
+            <figure class="shot">
+              <img src="assets/ourcheck/v1-06-my.jpg" width="540" height="960" loading="lazy" alt="아워체크 v1 MY 화면 — 내 조건 요약 · 데이터는 이 기기에만" />
+              <figcaption><b>MY</b><span>내 조건 요약 · 데이터는 이 기기에만</span></figcaption>
+            </figure>
+            <figure class="shot">
+              <img src="assets/ourcheck/v1-07-map.jpg" width="663" height="1194" loading="lazy" alt="아워체크 청약 지도 — 카카오맵 위 공고 마커와 근처 실거래가" />
+              <figcaption><b>청약 지도 (카카오맵 연동)</b><span>단지 위치와 반경 내 아파트 실거래가 동시 표시</span></figcaption>
+            </figure>
+            <figure class="shot">
+              <img src="assets/ourcheck/v1-08-detail-price.jpg" width="663" height="1194" loading="lazy" alt="아워체크 공고 상세 — 가점제·추첨제 세대수와 근처 아파트 매매 실거래" />
+              <figcaption><b>공고 상세 (가점·추첨 &amp; 실거래)</b><span>주택공급에 관한 규칙 제28조 기준 가점/추첨 세대수 자동 산출 및 인근 실거래가 비교</span></figcaption>
+            </figure>
+          </div>
+          <p class="small muted" style="margin-top:10px">화면 속 단지·금액은 테스트용 예시 프로필 기준입니다.</p>
+        </section>
+
+        <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px">
+          <a class="btn ghost small" href="project-manual-agent.html">← 이전: Project 02 매뉴얼 자동화</a>
+          <a class="btn primary small" href="ourcheck-screens-v2.html">전체 화면설계서 보기 →</a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <p>© <span id="year"></span> SoYoung Back. 목업 속 단지·금액은 설계용 예시 데이터입니다.</p>
+      <div class="footer-links"><a href="index.html">홈</a><a href="project-valuation.html">Project 01</a><a href="project-manual-agent.html">Project 02</a><a href="#top">위로</a></div>
+    </div>
+  </footer>
+  <script src="site.js"></script>
+</body>
+</html>
