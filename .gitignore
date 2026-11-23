@@ -9,3 +9,7 @@ Thumbs.db
 기업가치평가시스템_설계서.md
 IMG_*.png
 screenshots/
+
+# local source documents (resume, portfolio, estimates) and raw photos
+*.pdf1
+cc952689-*.jpeg

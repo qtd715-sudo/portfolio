@@ -284,7 +284,8 @@ p { margin: 0 0 12px; }
 
 /* ── Project tabs (index) ─────────────────────────────── */
 .projects { display: flex; flex-direction: column; gap: 18px; }
-.projects-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+.projects-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; }
+@media (max-width: 1180px) { .projects-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
 @media (max-width: 980px) { .projects-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 520px) { .projects-grid { grid-template-columns: minmax(0, 1fr); } }
 .card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); }
@@ -326,6 +327,64 @@ p { margin: 0 0 12px; }
 .erp-client { display: flex; flex-direction: column; }
 .erp-client-name { font-weight: 600; color: var(--ink); }
 .erp-client-industry { font-size: 12px; color: var(--ink-3); }
+
+/* Tech bids & effort estimation tab (reuses kpi / list-card / chain / state / plain-table) */
+.bid-switch { margin-bottom: 16px; }
+.bid-pane { display: flex; flex-direction: column; gap: 18px; }
+.bid-pane[hidden], .bid-est[hidden] { display: none; }
+.bid-kpis .kpi { box-shadow: none; }
+.bid-h { font-size: 15px; margin: 0 0 10px; }
+.bid-case { display: flex; flex-direction: column; gap: 10px; }
+.bid-case h4 { margin: 0; }
+.bid-tag { margin: 0; font-family: var(--mono); font-size: 11px; font-weight: 600; letter-spacing: .06em; color: var(--accent); }
+.bid-body { margin: 0; font-size: 13.5px; color: var(--ink-2); }
+.bid-case .feature-hl { margin-top: auto !important; }
+/* CSS box diagram: 4-step estimation flow (→ on desktop, ↓ on narrow screens) */
+.bid-flow { list-style: none; margin: 0; padding: 0; display: flex; align-items: stretch; }
+.bid-flow-box { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; gap: 6px; background: var(--surface-2); border: 1px solid var(--line); border-top: 3px solid var(--primary); border-radius: 8px; padding: 12px 14px; }
+.bid-flow-box.is-last { border-top-color: var(--accent); background: color-mix(in srgb, var(--accent) 8%, var(--surface-2)); }
+.bid-flow-box > b { font-size: 14.5px; line-height: 1.4; }
+.bid-flow-box ul { margin: 0; padding-left: 16px; font-size: 12.5px; color: var(--ink-2); }
+.bid-flow-box ul li { margin-bottom: 3px; }
+.bid-flow-no { font-family: var(--mono); font-size: 10.5px; font-weight: 600; letter-spacing: .06em; color: var(--primary); }
+.bid-flow-box.is-last .bid-flow-no { color: var(--cond-ink); }
+.bid-flow-cap { font-size: 11px; color: var(--ink-3); line-height: 1.4; }
+.bid-flow-arrow { flex: 0 0 22px; align-self: center; height: 2px; background: var(--ink-3); position: relative; margin: 0 4px; }
+.bid-flow-arrow::after { content: ""; position: absolute; right: -1px; top: -4px; border: 5px solid transparent; border-left: 7px solid var(--ink-3); border-right: 0; }
+.bid-flow-out { margin: 10px 0 0; display: flex; justify-content: flex-end; }
+.bid-flow-out span { font-family: var(--mono); font-size: 11.5px; color: var(--pass); border: 1px solid var(--pass); border-radius: 999px; padding: 3px 12px; }
+@media (max-width: 860px) {
+  .bid-flow { flex-direction: column; }
+  .bid-flow-arrow { flex: 0 0 22px; width: 2px; height: 22px; margin: 4px auto; }
+  .bid-flow-arrow::after { right: -4px; top: auto; bottom: -1px; border: 5px solid transparent; border-top: 7px solid var(--ink-3); border-bottom: 0; }
+  .bid-flow-out { justify-content: center; }
+}
+.wbs-bar { display: flex; height: 36px; border-radius: 6px; overflow: hidden; border: 1px solid var(--line); margin: 2px 0 0; }
+.wbs-seg { display: flex; flex-direction: column; line-height: 1.15; align-items: center; justify-content: center; gap: 0; min-width: 0; font-family: var(--mono); font-size: 10px; color: var(--surface); white-space: nowrap; }
+.wbs-seg b { font-family: var(--sans); font-weight: 700; }
+.wbs-0 { background: var(--primary-2); }
+.wbs-1 { background: var(--primary); }
+.wbs-2 { background: var(--accent); color: #1a1a1a; }
+.wbs-3 { background: var(--pass); }
+.bid-filter { margin-bottom: 8px; }
+/* 3-part tabs: 2x2 capability grid + collapsible archive */
+.axis-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+@media (max-width: 760px) { .axis-grid { grid-template-columns: minmax(0, 1fr); } }
+.axis-card { padding: 16px 18px; }
+.axis-card h3 { font-size: 15.5px; }
+.axis-card ul { font-size: 13.5px; }
+.acc-item.archive summary { grid-template-columns: 40px minmax(0, 1fr) auto; }
+.archive-body { padding: 4px 16px 16px; border-top: 1px solid var(--line-soft); padding-top: 14px; }
+.erp-desc { color: var(--ink); font-weight: 600; }
+.erp-points { margin: 4px 0 0; padding-left: 16px; font-size: 12.5px; color: var(--ink-2); }
+.erp-points li { margin-bottom: 2px; }
+.bid-est-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+@media (max-width: 760px) { .bid-est-grid { grid-template-columns: minmax(0, 1fr); } }
+.bid-est { background: var(--surface); border: 1px solid var(--line); border-left: 3px solid var(--primary); border-radius: var(--radius); padding: 12px 14px; display: flex; flex-direction: column; gap: 6px; }
+.bid-est header { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; }
+.bid-est p { margin: 0; font-size: 13.5px; color: var(--ink-2); }
+.bid-est p b { display: inline-block; min-width: 34px; margin-right: 6px; font-family: var(--mono); font-size: 10.5px; letter-spacing: .06em; color: var(--ink-3); }
+.bid-core { color: var(--ink) !important; font-weight: 600; }
 
 /* ── Footer ───────────────────────────────────────────── */
 .footer { border-top: 1px solid var(--line); background: var(--surface); padding: 22px 0; font-size: 13px; color: var(--ink-3); }
